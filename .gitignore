@@ -1,0 +1,7 @@
+build/*
+!build/.ignoreme
+*.d
+*.o
+.vscode/
+*.elf
+*.gba

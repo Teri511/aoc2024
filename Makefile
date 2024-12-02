@@ -5,7 +5,7 @@ GAME_CODE = "2024"
 # Maker Code, 2 Characters
 MAKER_CODE = "WM"
 
-obj := ./src/lib/asm/crt0.o ./src/main.o
+obj := ./src/lib/asm/crt0.o ./src/main.o ./src/asm/day1.o ./src/puzzle_data/day1/left_data.o
 elf := output.elf
 bin := output.gba
 

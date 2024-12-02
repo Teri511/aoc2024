@@ -50,7 +50,21 @@ def mass_convert_10_16(file_path):
                 count = 0
         output_file.seek(output_file.tell() - 3)
         output_file.write("\n};")
-    
+
+    # Start creating the header files
+    with open("./src/puzzle_data/day1/left_data.h","w") as output_file:
+        output_file.write("#ifndef AOC_LEFT_COL\n")
+        output_file.write("#define AOC_LEFT_COL\n")
+        output_file.write("#define left_list_len " + str(int(len(left_list)/2)) + "\n")
+        output_file.write("extern const unsigned short left_list[" + str(len(left_list)) + "];\n")
+        output_file.write("#endif")
+
+    with open("./src/puzzle_data/day1/right_data.h","w") as output_file:
+        output_file.write("#ifndef AOC_LEFT_COL\n")
+        output_file.write("#define AOC_LEFT_COL\n")
+        output_file.write("#define right_list_len " + str(int(len(right_list)/2)) + "\n")
+        output_file.write("extern const unsigned short right_list[" + str(len(right_list)) + "];\n")
+        output_file.write("#endif")
 
 
 if __name__ == "__main__":

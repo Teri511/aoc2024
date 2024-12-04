@@ -18,15 +18,16 @@
 #include "puzzle_data/day1/right_data.h"
 
 // EXTERNAL ASM FUNCTIONS
-extern void day1_entrypoint(const short unsigned int* ptr_left, uint32 ptr_right, uint16 count);
+extern void day1_entrypoint(const unsigned int* ptr_left, const unsigned int* ptr_right, uint16 count);
 
 ARM void InterruptProcess(){
 	return;
 }
 
 int AgbMain(){
+	uint16 len = left_list_len;
 	while(0==0){
-		day1_entrypoint(left_list,9,6);
+		day1_entrypoint(left_list,right_list,len);
 	}
 	return 0;
 }

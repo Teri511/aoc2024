@@ -174,7 +174,7 @@ right_load_loop:
     MOV r4, #0            @ r4 OK
     MOV r5, #0            @ r5 OK
 
-begin_final_tally:
+begin_part_1:
     LDR r6, [r0]
     LDR r7, [r1]
 
@@ -187,13 +187,57 @@ begin_final_tally:
     ADD r4, r4, #1
 
     CMP r4, r2
-    BLT begin_final_tally
+    BLT begin_part_1
 
-@ invert if left is smaller than right
+@ part 2: instead of doing diffs, count the number of times a number appears in
+@         the list and add it up. May run into issues if numbers go past the 32
+@         bit limit
+@ r0,r1: l and r list addrs
+@    r2: Total
+@    r3: Answer Part1
+@    r4: Answer Part2
+@    r5: l val
+@    r6: r val
+@    r7: l offset
+@    r8: r offset
+@   r11: encounter count
 
-@ restore r0-r1
+@ lets temporarily multiply total by 4, that way i can do easier offsetting
+
+    ROR r2, #30
+    LDR r0,=0x02000000    @ r0 OK
+    LDR r1,=0x02000000
+    ADD r1, r1, r2        @ r1 OK
+    MOV r4, #0            @ r4 OK
+    MOV r7, #0
+    MOV r8, #0
+    MOV r11, #0
+
+begin_part_2:
+    LDR r5, [r0, r7]
+
+top_of_r:
+    LDR r6, [r1, r8]
+    CMP r5, r6
+    ADDEQ r11, r11, #1
+
+    ADD r8, r8, #4
+    CMP r8, r2
+    BLT top_of_r
+
+    MUL r11, r11, r5
+    ADD r4, r4, r11
+    MOV r11, #0
+    MOV r8, #0
+    ADD r7, r7, #4
+    CMP r7, r2
+    BLT begin_part_2
+
+
+@ restore r0-r2
     MOV r0, r9
     MOV r1, r10
+    ROR r2, #2
 
 temp_check:
     b temp_check

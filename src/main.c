@@ -17,6 +17,11 @@
 #include "puzzle_data/day1/left_data.h"
 #include "puzzle_data/day1/right_data.h"
 
+struct day1_answer {
+	int part1;
+	int part2;
+};
+
 // EXTERNAL ASM FUNCTIONS
 extern void day1_entrypoint(const unsigned int* ptr_left, const unsigned int* ptr_right, uint16 count);
 

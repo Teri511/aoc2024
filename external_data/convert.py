@@ -12,10 +12,12 @@ def mass_convert_10_16(file_path):
             halves_str = curr_line.split(' ')
             # convert them into int
             padding = 8 - len(halves_str[0])
-            prefix = "0x" + ("0" * padding)
+            # prefix = "0x" + ("0" * padding)
+            prefix = ""
             left_list += [prefix + halves_str[0]]
             padding = 8 - len(halves_str[-1].split('\n')[0])
-            prefix = "0x" + ("0" * padding)
+            # prefix = "0x" + ("0" * padding)
+            prefix = ""
             right_list += [prefix + halves_str[-1].split('\n')[0]]
             curr_line = input_file.readline()
 

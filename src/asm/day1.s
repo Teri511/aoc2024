@@ -4,11 +4,6 @@
 @ Author: Will Martens
 @
 
-
-@@@@@@@@@@@@@@
-@ Game Logic @
-@@@@@@@@@@@@@@
-
     .TEXT
     .ALIGN
     .ARM
@@ -34,7 +29,7 @@ radix_sort:
     MOV r4, #0
     @ Too lazy, just store len * for in some unused register for later
     MOV r8, #4
-    MUL r8, r8, r2
+    MUL r8, r2, r8
 
 top_of_list:
     MOV r3, #0
@@ -225,7 +220,7 @@ top_of_r:
     CMP r8, r2
     BLT top_of_r
 
-    MUL r11, r11, r5
+    MUL r11, r5, r11
     ADD r4, r4, r11
     MOV r11, #0
     MOV r8, #0
@@ -234,13 +229,19 @@ top_of_r:
     BLT begin_part_2
 
 
-@ restore r0-r2
-    MOV r0, r9
-    MOV r1, r10
-    ROR r2, #2
+@ dump the answers into RAM and exit
+@ C side has the struct to interpret this answer
 
-temp_check:
-    b temp_check
+    @ TODO: can use rotates here
+    LDR r1,=0x02000000
+    ADD r1,r1,r2
+    ADD r1,r1,r2
+    STR r3, [r1]
+    ADD r1, r1, #4
+    STR r4, [r1]
+
+    SUB r1, r1, #4
+    MOV r0, r1
 
     LDMFD SP!, {r3-r12, lr}
     BX lr

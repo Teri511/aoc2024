@@ -17,13 +17,14 @@
 #include "puzzle_data/day1/left_data.h"
 #include "puzzle_data/day1/right_data.h"
 
-struct day1_answer {
+struct basic_answer {
 	int part1;
 	int part2;
 };
 
 // EXTERNAL ASM FUNCTIONS
-extern void day1_entrypoint(const unsigned int* ptr_left, const unsigned int* ptr_right, uint16 count);
+extern struct basic_answer* day1_entrypoint(const unsigned int* ptr_left, const unsigned int* ptr_right, uint16 count);
+extern struct basic_answer* day2_entrypoint(const unsigned char* ptr_list);
 
 ARM void InterruptProcess(){
 	return;
@@ -31,8 +32,9 @@ ARM void InterruptProcess(){
 
 int AgbMain(){
 	uint16 len = left_list_len;
+	struct basic_answer* answer = day1_entrypoint(left_list,right_list,len);
 	while(0==0){
-		day1_entrypoint(left_list,right_list,len);
+		;;
 	}
 	return 0;
 }

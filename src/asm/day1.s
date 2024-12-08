@@ -15,18 +15,66 @@
 	.GLOBAL day1_entrypoint
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Name: bad_radix_sort
-@ Desc: A wildly inefficient rendition of a MSB Radix sort
+@ Name: radix_sort
+@ Desc: A basic and rough implementation of LSB Radix sort
 @ Note: This is designed to sort in place, not return an address of a seperate,
 @       sorted list
 @  I/O: r0: I/O : Address of the list to sort
 @       r1: I   : Address of free RAM to work with
 @       r2: I   : Number of items in the list
 
-bad_radix_sort:
+radix_sort:
     STMFD SP!, {r3-r12, lr}
+    @ there are 32 bits, so get ready to rotate 32 times
+    @ r3: current offset
+    @ r4: count, max 32
+    @ r5: offset to next 0 location
+    @ r6: offset to next temp 1 location
+    @ r7: value to work with
+    MOV r4, #0
+    @ Too lazy, jsut store len * for in some unused register for later
+    MOV r8, #4
+    MUL r8, r8, r2
 
-    STR r1, [r1]
+top_of_list:
+    MOV r3, #0
+    MOV r5, #0
+    MOV r6, #0
+
+start_comparing:
+    LDR r7, [r0, r3]
+    ROR r7, r7, r4
+    AND r7, #1
+
+    CMP r7, #0
+    LDR r7, [r0, r3]
+    STREQ r7, [r0, r5]
+    ADDEQ r5, r5, #4
+    STRNE r7, [r1, r6]
+    ADDNE r6, r6, #4
+
+    ADD r3, r3, #4
+    CMP r3, r8
+    BLT start_comparing
+
+    # if the 1 list is empty, dont bother and just start the next loop
+    CMP r6, #0
+    BEQ exit_check
+
+    @ Zipper the 2 lists together here
+    MOV r9, #0
+cont_zippering:
+    LDR r7, [r1, r9]
+    STR r7, [r0, r5]
+    ADD r5, r5, #4
+    ADD r9, r9, #4
+    CMP r5, r8
+    BLT cont_zippering
+exit_check:
+    ADD r4, r4, #1
+    CMP r4, #32
+    BLT top_of_list
+
 
     LDMFD SP!, {r3-r12, lr}
     BX lr
@@ -84,7 +132,7 @@ right_load_loop:
         ADD r1,r1,r2
         ADD r1,r1,r2
 
-        BL bad_radix_sort
+        BL radix_sort
 
         LDMFD SP!, {r3-r12, lr}
 		BX lr
